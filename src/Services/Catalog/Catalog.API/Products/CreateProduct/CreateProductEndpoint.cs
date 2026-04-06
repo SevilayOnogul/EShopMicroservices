@@ -15,7 +15,7 @@ namespace Catalog.API.Products.CreateProduct
 
                 var result = await sender.Send(command);
 
-                var response = request.Adapt<CreateProductResponse>();
+                var response = result.Adapt<CreateProductResponse>();
 
                 return Results.Created($"/products/{response.Id}", response);
             })
