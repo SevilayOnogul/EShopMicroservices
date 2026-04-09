@@ -1,4 +1,3 @@
-````md
 # 🛒 EShop Microservices - Catalog API
 
 Bu proje, mikroservis mimarisi kullanılarak geliştirilen bir e-ticaret sisteminin **Catalog (Katalog) servisidir**. Ürün yönetimi işlemleri, modern yazılım desenleri ve kütüphaneler kullanılarak gerçekleştirilmiştir.
@@ -18,7 +17,7 @@ Bu proje, mikroservis mimarisi kullanılarak geliştirilen bir e-ticaret sistemi
 
 ## 🏗️ Mimari Yapı
 
-Projede **CQRS (Command Query Responsibility Segregation)** deseni uygulanmıştır.  
+Projede **CQRS (Command Query Responsibility Segregation)** ve **Vertical Slice Architecture** uygulanmıştır.  
 İşlemler ikiye ayrılmıştır:
 
 ### 🔍 Queries (Okuma İşlemleri)
@@ -32,6 +31,45 @@ Projede **CQRS (Command Query Responsibility Segregation)** deseni uygulanmışt
 - **CreateProduct** → Yeni ürün ekler  
 - **UpdateProduct** → Ürünü günceller  
 - **DeleteProduct** → Ürünü siler  
+
+---
+
+## 📁 Klasör Yapısı (Vertical Slice)
+
+Bu projede katmanlar (Layer) yerine **özellikler (Feature)** baz alınmıştır.  
+Her klasör (`CreateProduct`, `GetProducts` vb.) kendi içinde şunları barındırır:
+
+- **Command / Query** → İş mantığı  
+- **Handler** → İşlemi gerçekleştiren yapı  
+- **Validator** → FluentValidation ile veri doğrulaması  
+- **Endpoint** → API rotası  
+
+---
+
+## 🧩 Cross-Cutting Concerns
+
+- **Logging** → Uygulama loglama mekanizması  
+- **Global Exception Handling** → Merkezi hata yönetimi  
+- **Validation Pipeline** → FluentValidation ile request doğrulama  
+
+---
+
+## 📡 API Endpoints
+
+- `GET /products`
+- `GET /products/{id}`
+- `GET /products/category/{category}`
+- `POST /products`
+- `PUT /products`
+- `DELETE /products/{id}`
+
+---
+
+## 🏥 Health Checks
+
+Sistem durumunu kontrol etmek için:
+
+- `http://localhost:6000/health` → API ve veritabanı durumunu JSON formatında döner  
 
 ---
 
@@ -53,7 +91,6 @@ docker-compose up -d
 
 ## 📌 Not
 
-Bu proje, **Microservices Architecture**, **CQRS** ve **Vertical Slice yaklaşımı** temel alınarak geliştirilmiştir.
+Bu proje, **Microservices Architecture**, **CQRS** ve **Vertical Slice Architecture** yaklaşımları temel alınarak geliştirilmiştir.
 
-```
-```
+
