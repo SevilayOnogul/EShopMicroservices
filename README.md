@@ -9,10 +9,11 @@ Sistem, farklı iş alanlarına ayrılmış bağımsız servislerden oluşur ve 
 
 - **.NET 8 / ASP.NET Core**
 - **Marten** → PostgreSQL üzerinde Document DB yetenekleri sağlar  
-- **MediatR** → CQRS (Command Query Responsibility Segregation) deseni için  
-- **Carter** → Minimal API endpoint’lerini modüler şekilde tanımlamak için  
-- **Mapster** → Yüksek performanslı nesne eşleme (mapping) işlemleri  
+- **MediatR** → CQRS deseni için  
+- **Carter** → Minimal API endpoint’leri  
+- **Mapster** → Nesne eşleme (mapping)  
 - **Redis** → Dağıtık cache yönetimi (Basket Service)  
+- **Scrutor** → Decorator Pattern ile dependency injection desteği  
 - **Docker & Docker Compose** → Konteyner yönetimi  
 
 ---
@@ -33,7 +34,8 @@ Kullanıcı sepet işlemlerini yönetir.
 
 - Sepete ürün ekleme / silme  
 - Sepet görüntüleme  
-- Redis kullanılarak yüksek performanslı cache yönetimi  
+- Redis ile yüksek performanslı cache yönetimi  
+- Cache-Aside Pattern implementasyonu  
 
 ---
 
@@ -44,27 +46,29 @@ Projede aşağıdaki modern mimari yaklaşımlar uygulanmıştır:
 - **Microservices Architecture**
 - **CQRS (Command Query Responsibility Segregation)**
 - **Vertical Slice Architecture**
+- **Decorator Pattern**
+- **Cache-Aside Pattern**
 
 ---
 
 ## 📁 Klasör Yapısı (Vertical Slice)
 
-Bu projede katmanlar (Layer) yerine **özellikler (Feature)** baz alınmıştır.  
+Bu projede katmanlar yerine **feature bazlı yapı** kullanılmıştır.  
 
-Her feature klasörü (`CreateProduct`, `GetBasket` vb.) şu yapıyı içerir:
+Her feature klasörü (`CreateProduct`, `GetBasket` vb.) şu bileşenleri içerir:
 
 - **Command / Query** → İş mantığı  
-- **Handler** → İşlemi gerçekleştiren yapı  
-- **Validator** → FluentValidation ile doğrulama  
+- **Handler** → İşlem yönetimi  
+- **Validator** → FluentValidation  
 - **Endpoint** → API rotası  
 
 ---
 
 ## 🧩 Cross-Cutting Concerns
 
-- **Logging** → Uygulama loglama  
-- **Global Exception Handling** → Merkezi hata yönetimi  
-- **Validation Pipeline** → FluentValidation entegrasyonu  
+- **Logging**
+- **Global Exception Handling**
+- **Validation Pipeline**
 
 ---
 
@@ -85,11 +89,27 @@ Her feature klasörü (`CreateProduct`, `GetBasket` vb.) şu yapıyı içerir:
 
 ---
 
+## ⚡ Caching Strategy (Redis)
+
+Basket mikroservisinde performans optimizasyonu için **Distributed Caching** uygulanmıştır:
+
+1. **Okuma (Cache-Aside):**  
+   Önce Redis kontrol edilir. Veri varsa hızlıca döner, yoksa veritabanından çekilip cache’e yazılır.
+
+2. **Yazma / Güncelleme:**  
+   Veri hem veritabanına hem Redis’e yazılır.
+
+3. **Silme:**  
+   Hem cache hem veritabanı temizlenir.
+
+---
+
 ## 🏥 Health Checks
 
 - `http://localhost:6000/health` → Servis ve bağımlılıkların durumu  
 
 ---
+
 
 ## 🛠️ Kurulum ve Çalıştırma
 
@@ -99,16 +119,23 @@ Her feature klasörü (`CreateProduct`, `GetBasket` vb.) şu yapıyı içerir:
 
 ```bash
 docker-compose up -d
-````
-
+```
 3. API projelerini çalıştırın
 
-4. Swagger üzerinden endpoint’leri test edin
+4. API’leri test edin:
 
----
+### 🔹 Swagger UI
 
-## 📌 Not
+* Catalog API → http://localhost:6000/swagger
+* Basket API → http://localhost:6001/swagger
 
-Bu proje, **Microservices Architecture**, **CQRS** ve **Vertical Slice Architecture** yaklaşımları temel alınarak geliştirilmiştir.
+### 🔹 Postman
+
+* Endpoint’ler Postman üzerinden de test edilebilir
+
+> Not: Portlar proje ayarlarına göre değişebilir.
+
+
+
 
 
