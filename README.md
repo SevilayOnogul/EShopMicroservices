@@ -1,6 +1,7 @@
-# 🛒 EShop Microservices - Catalog API
+# 🛒 EShop Microservices
 
-Bu proje, mikroservis mimarisi kullanılarak geliştirilen bir e-ticaret sisteminin **Catalog (Katalog) servisidir**. Ürün yönetimi işlemleri, modern yazılım desenleri ve kütüphaneler kullanılarak gerçekleştirilmiştir.
+Bu proje, mikroservis mimarisi kullanılarak geliştirilen bir e-ticaret sistemidir.  
+Sistem, farklı iş alanlarına ayrılmış bağımsız servislerden oluşur ve modern yazılım mimarileri ile geliştirilmiştir.
 
 ---
 
@@ -11,51 +12,65 @@ Bu proje, mikroservis mimarisi kullanılarak geliştirilen bir e-ticaret sistemi
 - **MediatR** → CQRS (Command Query Responsibility Segregation) deseni için  
 - **Carter** → Minimal API endpoint’lerini modüler şekilde tanımlamak için  
 - **Mapster** → Yüksek performanslı nesne eşleme (mapping) işlemleri  
+- **Redis** → Dağıtık cache yönetimi (Basket Service)  
 - **Docker & Docker Compose** → Konteyner yönetimi  
+
+---
+
+## 🧩 Microservices
+
+### 📦 Catalog API
+Ürün yönetimi işlemlerini sağlar.
+
+- Ürün ekleme, güncelleme, silme  
+- Kategoriye göre filtreleme  
+- PostgreSQL + Marten kullanımı  
+
+---
+
+### 🛒 Basket API
+Kullanıcı sepet işlemlerini yönetir.
+
+- Sepete ürün ekleme / silme  
+- Sepet görüntüleme  
+- Redis kullanılarak yüksek performanslı cache yönetimi  
 
 ---
 
 ## 🏗️ Mimari Yapı
 
-Projede **CQRS (Command Query Responsibility Segregation)** ve **Vertical Slice Architecture** uygulanmıştır.  
-İşlemler ikiye ayrılmıştır:
+Projede aşağıdaki modern mimari yaklaşımlar uygulanmıştır:
 
-### 🔍 Queries (Okuma İşlemleri)
-
-- **GetProducts** → Tüm ürünleri listeler  
-- **GetProductById** → ID’ye göre ürün getirir  
-- **GetProductByCategory** → Kategoriye göre filtreleme yapar  
-
-### ✏️ Commands (Yazma İşlemleri)
-
-- **CreateProduct** → Yeni ürün ekler  
-- **UpdateProduct** → Ürünü günceller  
-- **DeleteProduct** → Ürünü siler  
+- **Microservices Architecture**
+- **CQRS (Command Query Responsibility Segregation)**
+- **Vertical Slice Architecture**
 
 ---
 
 ## 📁 Klasör Yapısı (Vertical Slice)
 
 Bu projede katmanlar (Layer) yerine **özellikler (Feature)** baz alınmıştır.  
-Her klasör (`CreateProduct`, `GetProducts` vb.) kendi içinde şunları barındırır:
+
+Her feature klasörü (`CreateProduct`, `GetBasket` vb.) şu yapıyı içerir:
 
 - **Command / Query** → İş mantığı  
 - **Handler** → İşlemi gerçekleştiren yapı  
-- **Validator** → FluentValidation ile veri doğrulaması  
+- **Validator** → FluentValidation ile doğrulama  
 - **Endpoint** → API rotası  
 
 ---
 
 ## 🧩 Cross-Cutting Concerns
 
-- **Logging** → Uygulama loglama mekanizması  
+- **Logging** → Uygulama loglama  
 - **Global Exception Handling** → Merkezi hata yönetimi  
-- **Validation Pipeline** → FluentValidation ile request doğrulama  
+- **Validation Pipeline** → FluentValidation entegrasyonu  
 
 ---
 
 ## 📡 API Endpoints
 
+### Catalog API
 - `GET /products`
 - `GET /products/{id}`
 - `GET /products/category/{category}`
@@ -63,13 +78,16 @@ Her klasör (`CreateProduct`, `GetProducts` vb.) kendi içinde şunları barınd
 - `PUT /products`
 - `DELETE /products/{id}`
 
+### Basket API
+- `GET /basket/{userName}`
+- `POST /basket`
+- `DELETE /basket/{userName}`
+
 ---
 
 ## 🏥 Health Checks
 
-Sistem durumunu kontrol etmek için:
-
-- `http://localhost:6000/health` → API ve veritabanı durumunu JSON formatında döner  
+- `http://localhost:6000/health` → Servis ve bağımlılıkların durumu  
 
 ---
 
@@ -83,9 +101,9 @@ Sistem durumunu kontrol etmek için:
 docker-compose up -d
 ````
 
-3. **Catalog.API** projesini çalıştırın
+3. API projelerini çalıştırın
 
-4. Swagger üzerinden API endpoint’lerini test edebilirsiniz
+4. Swagger üzerinden endpoint’leri test edin
 
 ---
 
