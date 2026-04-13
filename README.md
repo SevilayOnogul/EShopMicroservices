@@ -13,6 +13,7 @@ Sistem, farklı iş alanlarına ayrılmış bağımsız servislerden oluşur ve 
 - **Carter** → Minimal API endpoint’leri  
 - **Mapster** → Nesne eşleme (mapping)  
 - **Redis** → Dağıtık cache yönetimi (Basket Service)  
+- **gRPC** → Servisler arası yüksek performanslı iletişim  
 - **Scrutor** → Decorator Pattern ile dependency injection desteği  
 - **Docker & Docker Compose** → Konteyner yönetimi  
 
@@ -35,7 +36,8 @@ Kullanıcı sepet işlemlerini yönetir.
 - Sepete ürün ekleme / silme  
 - Sepet görüntüleme  
 - Redis ile yüksek performanslı cache yönetimi  
-- Cache-Aside Pattern implementasyonu
+- Cache-Aside Pattern implementasyonu  
+- Discount servisi ile entegre çalışarak indirimli fiyat hesaplama  
 
 ---
 
@@ -47,7 +49,7 @@ Kullanıcı sepet işlemlerini yönetir.
 - Basket servisi tarafından gRPC Client ile tüketilir  
 - SQLite veritabanı kullanılarak indirim verileri yönetilir  
 - gRPC Endpoint → `grpc://localhost:6062` (Docker) / `grpc://localhost:5052` (Local)
-  
+
 ---
 
 ## 🏗️ Mimari Yapı
@@ -63,12 +65,25 @@ Projede aşağıdaki modern mimari yaklaşımlar uygulanmıştır:
 
 ---
 
-## 🔗 Inter-Service Communication
+## 🔗 Inter-Service Communication (gRPC & REST)
 
 Servisler arası iletişim için farklı yaklaşımlar kullanılmıştır:
 
 - **gRPC** → Basket ve Discount servisleri arasında yüksek performanslı senkron iletişim  
 - **REST API** → Client ve API Gateway üzerinden erişim  
+
+---
+
+## 💰 Discount Integration Flow
+
+Sepete ürün eklenirken indirim hesaplama süreci aşağıdaki şekilde çalışır:
+
+1. Basket servisi, eklenen ürün için Discount servisine gRPC isteği gönderir  
+2. Discount servisi ilgili ürüne ait indirim bilgisini döner  
+3. Gelen indirim tutarı ürün fiyatına uygulanır  
+4. Güncellenmiş (indirimli) fiyat sepet içine kaydedilir  
+
+Bu yapı sayesinde **gerçek zamanlı fiyat hesaplama** ve **servisler arası senkron veri akışı** sağlanır.
 
 ---
 
@@ -131,7 +146,6 @@ Basket mikroservisinde performans optimizasyonu için **Distributed Caching** uy
 
 ---
 
-
 ## 🛠️ Kurulum ve Çalıştırma
 
 1. **Docker Desktop** çalışır durumda olmalıdır  
@@ -140,7 +154,8 @@ Basket mikroservisinde performans optimizasyonu için **Distributed Caching** uy
 
 ```bash
 docker-compose up -d
-```
+````
+
 3. API projelerini çalıştırın
 
 4. API’leri test edin:
@@ -155,8 +170,4 @@ docker-compose up -d
 * Endpoint’ler Postman üzerinden de test edilebilir
 
 > Not: Portlar proje ayarlarına göre değişebilir.
-
-
-
-
 
