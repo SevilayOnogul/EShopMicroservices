@@ -35,8 +35,19 @@ Kullanıcı sepet işlemlerini yönetir.
 - Sepete ürün ekleme / silme  
 - Sepet görüntüleme  
 - Redis ile yüksek performanslı cache yönetimi  
-- Cache-Aside Pattern implementasyonu  
+- Cache-Aside Pattern implementasyonu
 
+---
+
+### 💸 Discount gRPC Service
+İndirim hesaplamalarını yöneten yüksek performanslı bir mikroservistir.
+
+- gRPC protokolü ile servisler arası senkron iletişim sağlar  
+- Ürünlere uygulanan indirimleri hesaplar  
+- Basket servisi tarafından gRPC Client ile tüketilir  
+- SQLite veritabanı kullanılarak indirim verileri yönetilir  
+- gRPC Endpoint → `grpc://localhost:6062` (Docker) / `grpc://localhost:5052` (Local)
+  
 ---
 
 ## 🏗️ Mimari Yapı
@@ -48,6 +59,16 @@ Projede aşağıdaki modern mimari yaklaşımlar uygulanmıştır:
 - **Vertical Slice Architecture**
 - **Decorator Pattern**
 - **Cache-Aside Pattern**
+- **gRPC Communication (Inter-service)**
+
+---
+
+## 🔗 Inter-Service Communication
+
+Servisler arası iletişim için farklı yaklaşımlar kullanılmıştır:
+
+- **gRPC** → Basket ve Discount servisleri arasında yüksek performanslı senkron iletişim  
+- **REST API** → Client ve API Gateway üzerinden erişim  
 
 ---
 
