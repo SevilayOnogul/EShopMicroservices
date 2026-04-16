@@ -74,6 +74,26 @@ Servisler arası iletişim için farklı yaklaşımlar kullanılmıştır:
 
 ---
 
+## 🧠 Ordering Microservice (Advanced DDD)
+
+Ordering mikroservisi, karmaşık iş kurallarını yönetmek amacıyla **Domain-Driven Design (DDD)** prensipleri ile geliştirilmiştir.
+
+### ⚙️ Kullanılan DDD Yaklaşımları
+
+- **Tactical DDD Patterns**  
+  Entity, Value Object ve Aggregate Root yapıları kullanılarak zengin bir domain modeli oluşturulmuştur.
+
+- **Strongly Typed IDs**  
+  Primitive Obsession’ı önlemek için tüm kimlikler (Id) ve değer nesneleri özel tiplerle modellenmiştir.
+
+- **Encapsulation**  
+  İş kuralları tamamen domain katmanı içinde kapsüllenmiş, tutarsız veri oluşumu nesne seviyesinde engellenmiştir.
+
+- **Domain Events**  
+  Sistem içi yan etkiler domain event’ler ile yönetilerek gevşek bağlı (loosely coupled) bir yapı sağlanmıştır.
+
+ ---
+
 ## 💰 Discount Integration Flow
 
 Sepete ürün eklenirken indirim hesaplama süreci aşağıdaki şekilde çalışır:
