@@ -54,6 +54,17 @@ Kullanıcı sepet işlemlerini yönetir.
 
 ---
 
+### 🧾 Ordering API
+Sipariş yönetimini Domain-Driven Design prensipleriyle ele alan mikroservistir.
+
+- DDD (Domain-Driven Design) yaklaşımı ile geliştirilmiştir  
+- Entity, Value Object ve Aggregate Root yapıları içerir  
+- CQRS ve Clean Architecture ile yapılandırılmıştır  
+- EF Core Code First yaklaşımı ile geliştirilmiştir  
+- SQL Server veritabanı kullanılmaktadır  
+
+---
+
 ## 🏗️ Mimari Yapı
 
 Projede aşağıdaki modern mimari yaklaşımlar uygulanmıştır:
@@ -76,16 +87,6 @@ Servisler arası iletişim için farklı yaklaşımlar kullanılmıştır:
 
 ---
 
-### 📦 Ordering API
-Sipariş yönetimini Domain-Driven Design prensipleriyle ele alan mikroservistir.
-
-- DDD (Domain-Driven Design) yaklaşımı ile geliştirilmiştir  
-- Entity, Value Object ve Aggregate Root yapıları içerir  
-- CQRS ve Clean Architecture ile yapılandırılmıştır  
-- EF Core Code First yaklaşımı ile geliştirilmiştir  
-- SQL Server veritabanı kullanılmaktadır  
-
----
 
 ## 🧠 Ordering Microservice (Advanced DDD)
 
