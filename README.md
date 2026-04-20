@@ -15,7 +15,9 @@ Sistem, farklı iş alanlarına ayrılmış bağımsız servislerden oluşur ve 
 - **Redis** → Dağıtık cache yönetimi (Basket Service)  
 - **gRPC** → Servisler arası yüksek performanslı iletişim  
 - **Scrutor** → Decorator Pattern ile dependency injection desteği  
-- **Docker & Docker Compose** → Konteyner yönetimi  
+- **Docker & Docker Compose** → Konteyner yönetimi
+- **Entity Framework Core** → ORM ve veri erişim yönetimi  
+- **SQL Server** → Ordering servisi için ilişkisel veritabanı  
 
 ---
 
@@ -52,6 +54,17 @@ Kullanıcı sepet işlemlerini yönetir.
 
 ---
 
+### 🧾 Ordering API
+Sipariş yönetimini Domain-Driven Design prensipleriyle ele alan mikroservistir.
+
+- DDD (Domain-Driven Design) yaklaşımı ile geliştirilmiştir  
+- Entity, Value Object ve Aggregate Root yapıları içerir  
+- CQRS ve Clean Architecture ile yapılandırılmıştır  
+- EF Core Code First yaklaşımı ile geliştirilmiştir  
+- SQL Server veritabanı kullanılmaktadır  
+
+---
+
 ## 🏗️ Mimari Yapı
 
 Projede aşağıdaki modern mimari yaklaşımlar uygulanmıştır:
@@ -73,6 +86,7 @@ Servisler arası iletişim için farklı yaklaşımlar kullanılmıştır:
 - **REST API** → Client ve API Gateway üzerinden erişim  
 
 ---
+
 
 ## 🧠 Ordering Microservice (Advanced DDD)
 
