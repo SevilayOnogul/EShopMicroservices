@@ -15,7 +15,7 @@ Sistem, farklı iş alanlarına ayrılmış bağımsız servislerden oluşur ve 
 - **Redis** → Dağıtık cache yönetimi (Basket Service)  
 - **gRPC** → Servisler arası yüksek performanslı iletişim  
 - **Scrutor** → Decorator Pattern ile dependency injection desteği  
-- **Docker & Docker Compose** → Konteyner yönetimi
+- **Docker & Docker Compose** → Konteyner yönetimi  
 - **Entity Framework Core** → ORM ve veri erişim yönetimi  
 - **SQL Server** → Ordering servisi için ilişkisel veritabanı  
 
@@ -107,6 +107,25 @@ Ordering mikroservisi, karmaşık iş kurallarını yönetmek amacıyla **Domain
   Sistem içi yan etkiler domain event’ler ile yönetilerek gevşek bağlı (loosely coupled) bir yapı sağlanmıştır.
 
  ---
+
+## ⚙️ Ordering Application Layer (CQRS & MediatR)
+
+Ordering mikroservisinin kalbi olan bu katman, **Clean Architecture** ve **CQRS** prensiplerine göre yapılandırılmıştır.
+
+### 🛠️ Kullanılan Teknolojiler ve Desenler
+- **MediatR:** Command ve Query süreçlerini birbirinden ayırarak gevşek bağlı (loosely coupled) bir mimari sağlar.
+- **FluentValidation:** İsteklerin iş mantığına girmeden önce doğrulanmasını garanti altına alır.
+- **Mapster & Manual Mapping:** Domain modelleri ile DTO'lar arasındaki dönüşümler, performans odaklı extension metodları ile yönetilir.
+
+### ✨ Temel Özellikler
+- **CQRS Yapısı:**
+  - **Commands:** Sipariş oluşturma, güncelleme ve silme işlemleri (Create, Update, Delete).
+  - **Queries:** İsme göre, müşteriye göre filtreleme ve gelişmiş sayfalama (Pagination) destekli listeleme işlemleri.
+- **Domain Events:** Sipariş süreçlerindeki değişimleri (Örn: `OrderCreated`, `OrderUpdated`) takip eden ve sistem içi iletişimi sağlayan asenkron **EventHandler** yapıları.
+- **Sayfalama (Pagination):** `BuildingBlocks` katmanında tanımlanan global yapı sayesinde büyük veri setleri performanslı bir şekilde sunulur.
+- **Hata Yönetimi:** Uygulamaya özel `OrderNotFoundException` gibi hata sınıfları ile anlamlı geri bildirimler sağlanır.
+
+---
 
 ## 💰 Discount Integration Flow
 
