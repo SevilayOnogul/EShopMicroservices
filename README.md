@@ -106,7 +106,7 @@ Ordering mikroservisi, karmaşık iş kurallarını yönetmek amacıyla **Domain
 - **Domain Events**  
   Sistem içi yan etkiler domain event’ler ile yönetilerek gevşek bağlı (loosely coupled) bir yapı sağlanmıştır.
 
- ---
+---
 
 ## ⚙️ Ordering Application Layer (CQRS & MediatR)
 
@@ -125,6 +125,22 @@ Ordering mikroservisinin kalbi olan bu katman, **Clean Architecture** ve **CQRS*
 - **Sayfalama (Pagination):** `BuildingBlocks` katmanında tanımlanan global yapı sayesinde büyük veri setleri performanslı bir şekilde sunulur.
 - **Hata Yönetimi:** Uygulamaya özel `OrderNotFoundException` gibi hata sınıfları ile anlamlı geri bildirimler sağlanır.
 
+
+## 🌐 Ordering API Layer (Minimal API & Carter)
+
+Ordering mikroservisinin dış dünyaya açılan katmanıdır.  
+Minimal API yaklaşımı ile sade, performanslı ve okunabilir endpoint’ler oluşturulmuştur.
+
+### ⚙️ Kullanılan Yapılar
+- **Carter:** Minimal API endpoint’lerini modüler hale getirir  
+- **REPR Pattern (Request-Endpoint-Response):** Endpoint organizasyonunu sadeleştirir  
+- **Minimal API:** Controller yapısına alternatif, daha lightweight API tasarımı  
+
+### ✨ Özellikler
+- Endpoint’ler feature bazlı olarak organize edilmiştir  
+- Request ve Response modelleri açık ve ayrıştırılmıştır  
+- CQRS yapısına uygun olarak Command ve Query endpoint’leri ayrılmıştır
+  
 ---
 
 ## 💰 Discount Integration Flow
