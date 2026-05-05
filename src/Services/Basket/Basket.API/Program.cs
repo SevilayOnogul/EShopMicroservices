@@ -2,6 +2,8 @@
 using BuildingBlocks.Exceptions.Handler;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using BuildingBlocks.Messaging.MassTransit;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +51,18 @@ builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
         };
         return handler;
     });
+
+
+//Async Communication Services
+builder.Services.AddMessageBroker(builder.Configuration);
+
+//Cross-Cutting Services
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!)
+    .AddRedis(builder.Configuration.GetConnectionString("Redis")!);
+
 
 var app = builder.Build();
 
