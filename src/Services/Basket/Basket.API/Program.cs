@@ -31,11 +31,11 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
 }); 
 
-builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+//builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
-builder.Services.AddHealthChecks()
-    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!)
-    .AddRedis(builder.Configuration.GetConnectionString("Redis")!);
+//builder.Services.AddHealthChecks()
+//    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!)
+//    .AddRedis(builder.Configuration.GetConnectionString("Redis")!);
 
 
 //Grpc Services
