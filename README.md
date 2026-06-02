@@ -13,7 +13,9 @@ Sistem, farklı iş alanlarına ayrılmış bağımsız servislerden oluşur ve 
 - **Carter** → Minimal API endpoint’leri  
 - **Mapster** → Nesne eşleme (mapping)  
 - **Redis** → Dağıtık cache yönetimi (Basket Service)  
-- **gRPC** → Servisler arası yüksek performanslı iletişim  
+- **gRPC** → Servisler arası yüksek performanslı iletişim
+- **RabbitMQ** → Asynchronous message broker
+- **MassTransit** → RabbitMQ tabanlı message bus yönetimi
 - **Scrutor** → Decorator Pattern ile dependency injection desteği  
 - **Docker & Docker Compose** → Konteyner yönetimi  
 - **Entity Framework Core** → ORM ve veri erişim yönetimi  
@@ -75,17 +77,39 @@ Projede aşağıdaki modern mimari yaklaşımlar uygulanmıştır:
 - **Decorator Pattern**
 - **Cache-Aside Pattern**
 - **gRPC Communication (Inter-service)**
+- **Event-Driven Architecture**
+- **Asynchronous Messaging with RabbitMQ**
 
 ---
 
-## 🔗 Inter-Service Communication (gRPC & REST)
+## 🔗 Inter-Service Communication (gRPC, REST & Messaging)
 
 Servisler arası iletişim için farklı yaklaşımlar kullanılmıştır:
 
 - **gRPC** → Basket ve Discount servisleri arasında yüksek performanslı senkron iletişim  
-- **REST API** → Client ve API Gateway üzerinden erişim  
+- **REST API** → Client ve API Gateway üzerinden erişim
+- **RabbitMQ + MassTransit** → Basket ve Ordering servisleri arasında asynchronous event-driven communication sağlar
+  
 
 ---
+
+## 📨 Async Order Processing with RabbitMQ
+
+Checkout işlemi sırasında servisler arası iletişim asynchronous messaging yapısı ile sağlanmaktadır.
+
+### 🔄 İşleyiş Akışı
+
+1. Kullanıcı checkout işlemini başlatır  
+2. Basket servisi `BasketCheckoutEvent` event’ini publish eder  
+3. RabbitMQ event’i queue üzerinden iletir  
+4. Ordering servisi event’i consume ederek sipariş oluşturma sürecini başlatır  
+5. Başarılı işlem sonrası kullanıcının sepeti temizlenir  
+
+### ⚙️ Kullanılan Teknolojiler
+
+- **RabbitMQ** → Message Broker
+- **MassTransit** → Messaging abstraction ve consumer yönetimi
+- **Event-Driven Architecture** → Loose coupling ve scalable communication
 
 
 ## 🧠 Ordering Microservice (Advanced DDD)
@@ -233,6 +257,9 @@ docker-compose up -d
 
 * Catalog API → http://localhost:6000/swagger
 * Basket API → http://localhost:6001/swagger
+
+### 🔹 Message Broker UI
+* RabbitMQ Management → http://localhost:15672 (User: guest, Pass: guest)
 
 ### 🔹 Postman
 
