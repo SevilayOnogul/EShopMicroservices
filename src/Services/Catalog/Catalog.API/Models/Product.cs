@@ -1,6 +1,6 @@
-﻿namespace Shopping.Web.Models.Catalog;
+﻿namespace Catalog.API.Models;
 
-public class ProductModel
+public class Product
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
@@ -9,8 +9,3 @@ public class ProductModel
     public string ImageFile { get; set; } = default!;
     public decimal Price { get; set; }
 }
-
-//wrapper classes
-public record GetProductsResponse(IEnumerable<ProductModel> Products);
-public record GetProductByCategoryResponse(IEnumerable<ProductModel> Products);
-public record GetProductByIdResponse(ProductModel Product);

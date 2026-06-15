@@ -1,4 +1,4 @@
-﻿using Marten.Linq.QueryHandlers;
+﻿
 
 namespace Catalog.API.Products.GetProductByCategory
 {
