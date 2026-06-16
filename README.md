@@ -19,11 +19,34 @@ Sistem, farklı iş alanlarına ayrılmış bağımsız servislerden oluşur ve 
 - **Scrutor** → Decorator Pattern ile dependency injection desteği  
 - **Docker & Docker Compose** → Konteyner yönetimi  
 - **Entity Framework Core** → ORM ve veri erişim yönetimi  
-- **SQL Server** → Ordering servisi için ilişkisel veritabanı  
+- **SQL Server** → Ordering servisi için ilişkisel veritabanı
+- **YARP API Gateway** → Tersine proxy ve merkezi istek yönlendirme
+- **Refit** → Tip güvenli (Type-Safe) REST istemci yönetimi
+- **Razor Pages** → UI ve web arayüz yönetimi
 
 ---
 
 ## 🧩 Microservices
+
+### 🛡️ YARP API Gateway
+Tüm istemci (client) isteklerini tek bir noktadan karşılayan ve ilgili mikroservislere güvenli bir şekilde yönlendiren tersine proxy (Reverse Proxy) katmanıdır.
+
+- **YARP (Yet Another Reverse Proxy)** kütüphanesi kullanılmıştır.
+- Rotalama (Routing) yapılandırmaları dinamik olarak yönetilir.
+- Tüm mikroservislere dış dünyadan tek bir ortak port üzerinden erişim sağlar.
+- Gateway URL → `https://localhost:6064` (HTTPS) / `http://localhost:6004` (HTTP)
+
+---
+
+### 🌐 Web Application (Shopping.Web)
+Kullanıcıların ürünleri listelediği, sepet işlemlerini yönettiği ve sipariş verdiği frontend katmanıdır.
+
+- **ASP.NET Core Razor Pages** mimarisi ile geliştirilmiştir.
+- **Refit** kütüphanesi kullanılarak mikroservis API'leri ile tip güvenli (Type-Safe) ve deklaratif bir şekilde haberleşir.
+- `ICatalogService`, `IBasketService` ve `IOrderingService` soyutlamaları üzerinden Gateway ile konuşur.
+- Sayfalama (Pagination) yanıtlarını backend ile tam uyumlu karşılayacak `PaginatedResult` yapısını içerir.
+
+---
 
 ### 📦 Catalog API
 Ürün yönetimi işlemlerini sağlar.
@@ -79,6 +102,8 @@ Projede aşağıdaki modern mimari yaklaşımlar uygulanmıştır:
 - **gRPC Communication (Inter-service)**
 - **Event-Driven Architecture**
 - **Asynchronous Messaging with RabbitMQ**
+- **API Gateway Pattern (YARP)**
+- **Type-Safe REST Communication (Refit)**
 
 ---
 
@@ -111,6 +136,7 @@ Checkout işlemi sırasında servisler arası iletişim asynchronous messaging y
 - **MassTransit** → Messaging abstraction ve consumer yönetimi
 - **Event-Driven Architecture** → Loose coupling ve scalable communication
 
+---
 
 ## 🧠 Ordering Microservice (Advanced DDD)
 
@@ -118,17 +144,10 @@ Ordering mikroservisi, karmaşık iş kurallarını yönetmek amacıyla **Domain
 
 ### ⚙️ Kullanılan DDD Yaklaşımları
 
-- **Tactical DDD Patterns**  
-  Entity, Value Object ve Aggregate Root yapıları kullanılarak zengin bir domain modeli oluşturulmuştur.
-
-- **Strongly Typed IDs**  
-  Primitive Obsession’ı önlemek için tüm kimlikler (Id) ve değer nesneleri özel tiplerle modellenmiştir.
-
-- **Encapsulation**  
-  İş kuralları tamamen domain katmanı içinde kapsüllenmiş, tutarsız veri oluşumu nesne seviyesinde engellenmiştir.
-
-- **Domain Events**  
-  Sistem içi yan etkiler domain event’ler ile yönetilerek gevşek bağlı (loosely coupled) bir yapı sağlanmıştır.
+- **Tactical DDD Patterns** Entity, Value Object ve Aggregate Root yapıları kullanılarak zengin bir domain modeli oluşturulmuştur.
+- **Strongly Typed IDs** Primitive Obsession’ı önlemek için tüm kimlikler (Id) ve değer nesneleri özel tiplerle modellenmiştir.
+- **Encapsulation** İş kuralları tamamen domain katmanı içinde kapsüllenmiş, tutarsız veri oluşumu nesne seviyesinde engellenmiştir.
+- **Domain Events** Sistem içi yan etkiler domain event’ler ile yönetilerek gevşek bağlı (loosely coupled) bir yapı sağlanmıştır.
 
 ---
 
@@ -149,6 +168,7 @@ Ordering mikroservisinin kalbi olan bu katman, **Clean Architecture** ve **CQRS*
 - **Sayfalama (Pagination):** `BuildingBlocks` katmanında tanımlanan global yapı sayesinde büyük veri setleri performanslı bir şekilde sunulur.
 - **Hata Yönetimi:** Uygulamaya özel `OrderNotFoundException` gibi hata sınıfları ile anlamlı geri bildirimler sağlanır.
 
+---
 
 ## 🌐 Ordering API Layer (Minimal API & Carter)
 
@@ -222,20 +242,15 @@ Her feature klasörü (`CreateProduct`, `GetBasket` vb.) şu bileşenleri içeri
 
 Basket mikroservisinde performans optimizasyonu için **Distributed Caching** uygulanmıştır:
 
-1. **Okuma (Cache-Aside):**  
-   Önce Redis kontrol edilir. Veri varsa hızlıca döner, yoksa veritabanından çekilip cache’e yazılır.
-
-2. **Yazma / Güncelleme:**  
-   Veri hem veritabanına hem Redis’e yazılır.
-
-3. **Silme:**  
-   Hem cache hem veritabanı temizlenir.
+1. **Okuma (Cache-Aside):** Önce Redis kontrol edilir. Veri varsa hızlıca döner, yoksa veritabanından çekilip cache’e yazılır.
+2. **Yazma / Güncelleme:** Veri hem veritabanına hem Redis’e yazılır.
+3. **Silme:** Hem cache hem veritabanı temizlenir.
 
 ---
 
 ## 🏥 Health Checks
 
-- `http://localhost:6000/health` → Servis ve bağımlılıkların durumu  
+- `https://localhost:6064/health` → Gateway portu üzerinden tüm servis ve bağımlılıkların sağlık durumu tek noktadan izlenebilir.
 
 ---
 
@@ -243,27 +258,35 @@ Basket mikroservisinde performans optimizasyonu için **Distributed Caching** uy
 
 1. **Docker Desktop** çalışır durumda olmalıdır  
 
-2. Terminalde proje dizinine gidin:
-
+2. Terminalde proje dizinine gidin ve sistemi ayağa kaldırın:
+   
 ```bash
 docker-compose up -d
-````
+```
 
-3. API projelerini çalıştırın
+🔹 API Gateway & Service URLs
+Artık mikroservislere doğrudan bağlanmak yerine merkezi YARP Gateway (6064) üzerinden erişim sağlanmaktadır:
 
-4. API’leri test edin:
+- API Gateway Root (HTTPS): https://localhost:6064
 
-### 🔹 Swagger UI
+- Catalog API Endpoints: https://localhost:6064/catalog-service/products
 
-* Catalog API → http://localhost:6000/swagger
-* Basket API → http://localhost:6001/swagger
+- Basket API Endpoints: https://localhost:6064/basket-service/basket/{userName}
 
-### 🔹 Message Broker UI
-* RabbitMQ Management → http://localhost:15672 (User: guest, Pass: guest)
+- Web UI (Shopping.Web): https://localhost:6065 veya http://localhost:6005
 
-### 🔹 Postman
+🔹 Swagger UI
+Mikroservislerin API dokümantasyonlarına da doğrudan YARP Gateway üzerinden güvenli bir şekilde erişebilirsiniz:
 
-* Endpoint’ler Postman üzerinden de test edilebilir
+- Catalog API Swagger: https://localhost:6064/catalog-service/swagger
 
-> Not: Portlar proje ayarlarına göre değişebilir.
+- Basket API Swagger: https://localhost:6064/basket-service/swagger
+
+🔹 Message Broker UI
+- RabbitMQ Management: http://localhost:15672 (User: guest, Pass: guest)
+
+🔹 Postman
+- Tüm endpoint'ler Postman üzerinden https://localhost:6064 ana adresi (Gateway) kullanılarak test edilebilir.
+
+Not: Postman üzerinden HTTPS istekleri atarken yerel sertifika hatalarıyla karşılaşmamak için Postman ayarlarından SSL certificate verification seçeneğini kapatmanız önerilir.
 
