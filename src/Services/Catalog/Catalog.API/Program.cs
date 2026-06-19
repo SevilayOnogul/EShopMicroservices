@@ -1,8 +1,9 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using BuildingBlocks.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseCustomLogging("Catalog.API");
 // Add services to the container.
 var assembly=typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>
