@@ -11,15 +11,20 @@ public static class LoggingExtensions
         host.UseSerilog((context, loggerConfiguration) =>
         {
             loggerConfiguration
-                .MinimumLevel.Information() 
+                .MinimumLevel.Information()
                 .Enrich.FromLogContext()
-                .Enrich.WithProperty("ApplicationName", applicationName) 
+                .Enrich.WithProperty("ApplicationName", applicationName)
                 .Enrich.WithMachineName()
                 .Enrich.WithProcessId()
-                .WriteTo.Console() 
-                .WriteTo.Seq("http://seq:80"); 
+                .WriteTo.Console()
+                .WriteTo.Seq("http://seq:80");
         });
 
         return host;
+    }
+
+    public static IApplicationBuilder UseCorrelationId(this IApplicationBuilder app)
+    {
+        return app.UseMiddleware<CorrelationIdMiddleware>();
     }
 }
