@@ -215,7 +215,15 @@ Her feature klasörü (`CreateProduct`, `GetBasket` vb.) şu bileşenleri içeri
 
 ## 🧩 Cross-Cutting Concerns
 
-- **Logging**
+### 📊 Merkezi Loglama (Centralized Logging) & İzlenebilirlik
+
+Projedeki mikroservislerin log yönetimi, **Serilog** kütüphanesi ve **Seq** paneli entegrasyonu ile merkezi bir yapıya taşınmıştır. Kod tekrarını önlemek amacıyla loglama konfigürasyonları `BuildingBlocks` katmanı üzerinde genişletme metodu (Extension Method) olarak kurgulanmıştır.
+
+#### Kullanılan Teknolojiler & Paketler
+* **Serilog.AspNetCore:** Temel loglama mimarisi.
+* **Serilog.Sinks.Seq:** Logların merkezi Seq sunucusuna asenkron fırlatılması.
+* **Serilog.Enrichers:** Log verilerine `ApplicationName`, `MachineName` ve `ProcessId` gibi meta verilerin otomatik eklenmesi.
+
 - **Global Exception Handling**
 - **Validation Pipeline**
 
