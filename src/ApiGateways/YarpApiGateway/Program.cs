@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.RateLimiting;
+using BuildingBlocks.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseCustomLogging("YarpApiGateway");
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
@@ -15,7 +16,7 @@ builder.Services.AddRateLimiter(rateLimiterOptions =>
 });
 
 var app = builder.Build();
-
+app.UseCorrelationId();
 
 app.UseRateLimiter();
 
