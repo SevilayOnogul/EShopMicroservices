@@ -3,10 +3,11 @@ using BuildingBlocks.Exceptions.Handler;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using BuildingBlocks.Messaging.MassTransit;
+using BuildingBlocks.Logging;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseCustomLogging("Basket.API");
 // Add services to the container.
 var assembly=typeof(Program).Assembly;
 builder.Services.AddCarter();
@@ -65,7 +66,7 @@ builder.Services.AddHealthChecks()
 
 
 var app = builder.Build();
-
+app.UseCorrelationId();
 // Configure the HTTP request pipeline.
 app.MapCarter();
 app.UseExceptionHandler(options => { });
