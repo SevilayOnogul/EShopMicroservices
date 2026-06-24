@@ -20,7 +20,7 @@ namespace Catalog.API.Products.UpdateProduct
         }
     }
 
-    internal class UpdateProductCommandHandler
+    public class UpdateProductCommandHandler
       (IDocumentSession session)
       : ICommandHandler<UpdateProductCommand, UpdateProductResult>
     {
