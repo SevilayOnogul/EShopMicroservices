@@ -45,7 +45,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shopping.Web", "WebApps\Sho
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D12FF70F-DBBF-4AAF-BE65-119B63F55049}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API.Tests", "tests\Catalog.API.Tests\Catalog.API.Tests\Catalog.API.Tests.csproj", "{1DAFA235-CE3B-435E-AB1D-DA9D06F99650}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API.Tests", "tests\Catalog.API.Tests\Catalog.API.Tests\Catalog.API.Tests.csproj", "{1DAFA235-CE3B-435E-AB1D-DA9D06F99650}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.API.Tests", "tests\Basket.API.Tests\Basket.API.Tests.csproj", "{F2E08B9F-CC13-425F-A0E1-6AD7A2FF0175}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{1DAFA235-CE3B-435E-AB1D-DA9D06F99650}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DAFA235-CE3B-435E-AB1D-DA9D06F99650}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DAFA235-CE3B-435E-AB1D-DA9D06F99650}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2E08B9F-CC13-425F-A0E1-6AD7A2FF0175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2E08B9F-CC13-425F-A0E1-6AD7A2FF0175}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2E08B9F-CC13-425F-A0E1-6AD7A2FF0175}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2E08B9F-CC13-425F-A0E1-6AD7A2FF0175}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +132,7 @@ Global
 		{87B97348-D143-4150-A375-D8849CB07962} = {7726193C-92A0-4E19-B233-B10C9E1C5115}
 		{2C625509-68C4-417F-849A-6D1A1B458529} = {EF12F30F-8EC8-4666-AFB6-657005E3E635}
 		{1DAFA235-CE3B-435E-AB1D-DA9D06F99650} = {D12FF70F-DBBF-4AAF-BE65-119B63F55049}
+		{F2E08B9F-CC13-425F-A0E1-6AD7A2FF0175} = {D12FF70F-DBBF-4AAF-BE65-119B63F55049}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A6841A39-C39C-4FBF-A6E5-623E0ADB407C}
