@@ -1,0 +1,54 @@
+﻿using Moq;
+using FluentAssertions;
+using Xunit;
+using Discount.Grpc.Services;
+using Discount.Grpc;
+using Discount.Grpc.Data;
+using Discount.Grpc.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+
+namespace Discount.Grpc.Tests.Services;
+
+public class DiscountServiceTests
+{
+    private DiscountContext GetInMemoryDbContext()
+    {
+        var options = new DbContextOptionsBuilder<DiscountContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        return new DiscountContext(options);
+    }
+
+    [Fact]
+    public async Task GetDiscount_WithValidProductName_ShouldReturnCoupon()
+    {
+        // 1. Arrange (Hazırlık)
+        var productName = "Keyboard";
+        var request = new GetDiscountRequest { ProductName = productName };
+
+        using var dbContext = GetInMemoryDbContext();
+        var mockLogger = new Mock<ILogger<DiscountService>>();
+
+        var fakeCoupon = new Coupon
+        {
+            Id = 1,
+            ProductName = productName,
+            Amount = 200,
+            Description = "Keyboard Discount"
+        };
+        dbContext.Coupons.Add(fakeCoupon);
+        await dbContext.SaveChangesAsync();
+
+        var service = new DiscountService(dbContext, mockLogger.Object);
+
+        // 2. Act (Çalıştırma)
+        var result = await service.GetDiscount(request, null!);
+
+        // 3. Assert (Doğrulama)
+        result.Should().NotBeNull();
+        result.ProductName.Should().Be(productName);
+        result.Amount.Should().Be(200);
+    }
+}
