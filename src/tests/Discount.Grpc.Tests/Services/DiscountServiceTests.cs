@@ -7,6 +7,7 @@ using Discount.Grpc.Data;
 using Discount.Grpc.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Grpc.Core;
 
 namespace Discount.Grpc.Tests.Services;
 
@@ -134,5 +135,57 @@ public class DiscountServiceTests
         dbCoupon.Should().NotBeNull();
         dbCoupon!.Amount.Should().Be(80);
         dbCoupon.Description.Should().Be("Updated Mouse Super Discount");
+    }
+
+    [Fact]
+    public async Task DeleteDiscount_WithValidProductName_ShouldDeleteFromDatabaseAndReturnSuccessTrue()
+    {
+        // 1. Arrange (Hazırlık)
+        using var dbContext = GetInMemoryDbContext();
+        var mockLogger = new Mock<ILogger<DiscountService>>();
+
+        var productName = "Monitor";
+        var existingCoupon = new Coupon
+        {
+            Id = 3,
+            ProductName = productName,
+            Amount = 150,
+            Description = "Monitor Discount"
+        };
+        dbContext.Coupons.Add(existingCoupon);
+        await dbContext.SaveChangesAsync();
+        dbContext.ChangeTracker.Clear();
+
+        var service = new DiscountService(dbContext, mockLogger.Object);
+        var request = new DeleteDiscountRequest { ProductName = productName };
+
+        // 2. Act (Çalıştırma)
+        var result = await service.DeleteDiscount(request, null!);
+
+        // 3. Assert (Doğrulama)
+        result.Should().NotBeNull();
+        result.Success.Should().BeTrue();
+
+        // Veritabanından gerçekten silindi mi?
+        var dbCoupon = await dbContext.Coupons.FirstOrDefaultAsync(x => x.ProductName == productName);
+        dbCoupon.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteDiscount_WithNonExistingProductName_ShouldThrowRpcExceptionWithNotFoundStatus()
+    {
+        // 1. Arrange (Hazırlık)
+        using var dbContext = GetInMemoryDbContext();
+        var mockLogger = new Mock<ILogger<DiscountService>>();
+
+        var service = new DiscountService(dbContext, mockLogger.Object);
+        var request = new DeleteDiscountRequest { ProductName = "NonExistingProduct" };
+
+        // 2. Act & 3. Assert (Hata Fırlatma Doğrulaması)
+        var act = async () => await service.DeleteDiscount(request, null!);
+
+        // Metodun RpcException fırlatmasını ve durum kodunun NotFound (404) olmasını bekliyoruz
+        var exception = await act.Should().ThrowAsync<RpcException>();
+        exception.Which.StatusCode.Should().Be(StatusCode.NotFound);
     }
 }
