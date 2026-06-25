@@ -85,4 +85,54 @@ public class DiscountServiceTests
         dbCoupon.Should().NotBeNull();
         dbCoupon!.Amount.Should().Be(500);
     }
+
+    [Fact]
+    public async Task UpdateDiscount_WithValidRequest_ShouldUpdateDatabaseAndReturnCouponModel()
+    {
+        // 1. Arrange (Hazırlık)
+        using var dbContext = GetInMemoryDbContext();
+        var mockLogger = new Mock<ILogger<DiscountService>>();
+
+        // Güncellenecek eski kuponu veritabanına ekliyoruz
+        var existingCoupon = new Coupon
+        {
+            Id = 2,
+            ProductName = "Mouse",
+            Amount = 50,
+            Description = "Old Mouse Discount"
+        };
+        dbContext.Coupons.Add(existingCoupon);
+        await dbContext.SaveChangesAsync();
+
+        // 🔥 KRİTİK DOKUNUŞ: EF Core'un hafızasındaki takibi temizliyoruz.
+        // Böylece servis içindeki Update metodu çakışma yaşamadan çalışabilecek.
+        dbContext.ChangeTracker.Clear();
+
+        var service = new DiscountService(dbContext, mockLogger.Object);
+
+        // gRPC üzerinden gelecek güncel bilgileri içeren istek parametresi
+        var request = new UpdateDiscountRequest
+        {
+            Coupon = new CouponModel
+            {
+                Id = 2,
+                ProductName = "Mouse",
+                Amount = 80,
+                Description = "Updated Mouse Super Discount"
+            }
+        };
+
+        // 2. Act (Çalıştırma)
+        var result = await service.UpdateDiscount(request, null!);
+
+        // 3. Assert (Doğrulama)
+        result.Should().NotBeNull();
+        result.Amount.Should().Be(80);
+
+        // Ekstra Doğrulama: Veritabanına gidip gerçekten güncellenmiş mi diye bakıyoruz
+        var dbCoupon = await dbContext.Coupons.FirstOrDefaultAsync(x => x.Id == 2);
+        dbCoupon.Should().NotBeNull();
+        dbCoupon!.Amount.Should().Be(80);
+        dbCoupon.Description.Should().Be("Updated Mouse Super Discount");
+    }
 }
