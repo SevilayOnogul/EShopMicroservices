@@ -51,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basket.API.Tests", "tests\B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discount.Grpc.Tests", "tests\Discount.Grpc.Tests\Discount.Grpc.Tests.csproj", "{87B49811-D73B-451F-BB82-6E1C853E465A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Application.Tests", "tests\Ordering.Application.Tests\Ordering.Application.Tests.csproj", "{FB74FB9B-081C-44E4-903F-EEAA699BAE21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Application.Tests", "tests\Ordering.Application.Tests\Ordering.Application.Tests.csproj", "{FB74FB9B-081C-44E4-903F-EEAA699BAE21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
